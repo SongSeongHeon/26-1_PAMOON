@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wearable ECG Authentication System</title>
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+  </head>
+
+  <body>
+    <main class="page">
+      <header class="header">
+        <!-- 프로젝트 제목 영역은 현재 UI에서 숨김 처리 -->
+      </header>
+
+      <section class="dashboard">
+        <!-- LEFT PANEL -->
+        <aside class="panel left-panel">
+          <div class="panel-title cyan">ECG 데이터 정보</div>
+
+          <div class="user-card subject-control-card">
+            <button class="subject-open-btn" id="subjectOpenBtn" type="button">
+              <span>측정자 설정</span>
+            </button>
+
+            <div class="current-subject-mini" id="currentSubjectText">
+              측정자 미설정
+            </div>
+          </div>
+
+          <div class="info-list">
+            <div class="info-row">
+              <span>이름</span>
+              <strong id="reportName">-</strong>
+            </div>
+
+            <div class="info-row">
+              <span>측정 시간</span>
+              <strong id="measuredTime">-</strong>
+            </div>
+
+            <div class="info-row">
+              <span>평균 심박수</span>
+              <strong id="heartRate">-</strong>
+            </div>
+
+            <div class="info-row">
+              <span>측정 기기</span>
+              <strong id="deviceName">-</strong>
+            </div>
+
+            <div class="info-row">
+              <span>샘플링 주파수</span>
+              <strong id="samplingRate">-</strong>
+            </div>
+
+            <div class="info-row">
+              <span>Lead</span>
+              <strong id="leadType">Lead I ECG</strong>
+            </div>
+          </div>
+
+          <div class="upload-box">
+            <label for="rawInput" class="upload-label">ECG 데이터 업로드</label>
+            <input id="rawInput" type="file" accept=".json,application/json" />
+
+            <div class="file-name" id="fileName">측정 데이터 대기 중</div>
+
+            <div class="upload-help">
+              <p>워치 측정 완료 후 ECG 데이터가 자동 반영됩니다.</p>
+              <p>필요 시 ECG JSON 파일을 직접 업로드할 수 있습니다.</p>
+            </div>
+          </div>
+
+          <div class="record-title">최근 인증</div>
+
+          <div class="record-list" id="recordList">
+            <div class="record-item empty">최근 인증 없음</div>
+          </div>
+        </aside>
+
+        <!-- CENTER PANEL -->
+        <section class="center-panel">
+          <div class="panel ecg-panel">
+            <div class="panel-title">ECG 파형</div>
+
+            <div class="ecg-view">
+              <div class="grid-bg"></div>
+
+              <div class="ecg-diff-window" id="ecgDiffWindow"></div>
+
+              <div class="ecg-diff-label" id="ecgDiffLabel">차이 구간: -</div>
+
+              <div class="ecg-meta">
+                <span>30 s</span>
+                <span>500 Hz</span>
+                <span>Lead I ECG</span>
+              </div>
+
+              <svg
+                id="ecgSvg"
+                class="ecg-svg"
+                viewBox="0 0 1000 320"
+                preserveAspectRatio="none"
+              >
+                <path id="ecgTrailPath" class="ecg-trail-path" d=""></path>
+                <path id="ecgPath" class="ecg-main-path" d=""></path>
+              </svg>
+
+              <div class="ecg-time-axis">
+                <span>0s</span>
+                <span>10s</span>
+                <span>20s</span>
+                <span>30s</span>
+              </div>
+
+              <div class="ecg-empty" id="ecgEmpty">
+                ECG 데이터를 수신하면 파형이 표시됩니다.
+              </div>
+            </div>
+          </div>
+
+          <div class="panel fingerprint-panel">
+            <div class="fingerprint-header">
+              <h2>ECG 신호 분석</h2>
+            </div>
+
+            <div class="heart-fingerprint-body single">
+              <div class="trust-card" id="trustCard">
+                <div class="trust-card-head">
+                  <div>
+                    <strong>ECG 신호 품질</strong>
+                    <p>인증에 사용할 ECG 품질을 확인합니다.</p>
+                  </div>
+
+                  <div class="trust-status-actions">
+                    <span class="trust-badge waiting" id="trustBadge">
+                      대기 중
+                    </span>
+
+                    <button
+                      class="quality-info-btn"
+                      id="qualityInfoBtn"
+                      type="button"
+                      aria-label="ECG 신호 품질 설명"
+                    >
+                      !
+                    </button>
+                  </div>
+                </div>
+
+                <div class="trust-main">
+                  <div class="trust-score-box">
+                    <span class="trust-score-label">신호 품질 등급</span>
+                    <strong id="trustLevel">-</strong>
+                    <p id="trustMessage">
+                      ECG 데이터를 수신하면 신호 품질이 표시됩니다.
+                    </p>
+                  </div>
+
+                  <div class="trust-grid">
+                    <div class="trust-item">
+                      <span>추정 심박수</span>
+                      <strong id="hrvHeartRate">-</strong>
+                    </div>
+
+                    <div class="trust-item">
+                      <span>리듬 안정성</span>
+                      <strong id="hrvQualityLabel">-</strong>
+                    </div>
+
+                    <div class="trust-item">
+                      <span>유효 박동 수</span>
+                      <strong id="hrvValidBeat">-</strong>
+                    </div>
+
+                    <div class="trust-item">
+                      <span>RR 안정도</span>
+                      <strong id="hrvStabilityScore">-</strong>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="quality-guide">
+                  <strong>품질 기준</strong>
+                  <p>
+                    RR 간격, 심박수, 유효 박동 수를 기준으로 인증 비교에
+                    적합한지 판단합니다.
+                  </p>
+                </div>
+
+                <div class="trust-detail-list">
+                  <div class="trust-detail-row">
+                    <span>기준 심박수</span>
+                    <strong id="hrvPdfHeartRate">-</strong>
+                  </div>
+
+                  <div class="trust-detail-row">
+                    <span>ECG 추정 심박수</span>
+                    <strong id="hrvEstimatedHeartRate">-</strong>
+                  </div>
+
+                  <div class="trust-detail-row">
+                    <span>SDNN</span>
+                    <strong id="hrvSdnn">-</strong>
+                  </div>
+
+                  <div class="trust-detail-row">
+                    <span>RMSSD</span>
+                    <strong id="hrvRmssd">-</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- RIGHT PANEL -->
+        <aside class="right-panel">
+          <div class="panel result-panel">
+            <div class="panel-title orange">인증 결과</div>
+
+            <div class="result-main">
+              <div class="score-gauge-card">
+                <div class="score-gauge-wrap">
+                  <svg class="score-gauge" viewBox="0 0 220 220">
+                    <defs>
+                      <linearGradient
+                        id="scoreGradient"
+                        x1="0%"
+                        y1="0%"
+                        x2="100%"
+                        y2="100%"
+                      >
+                        <stop offset="0%" stop-color="#f59a65" />
+                        <stop offset="100%" stop-color="#e66c39" />
+                      </linearGradient>
+                    </defs>
+
+                    <circle
+                      class="score-gauge-track"
+                      cx="110"
+                      cy="110"
+                      r="78"
+                    ></circle>
+
+                    <circle
+                      class="score-gauge-progress"
+                      id="scoreGaugeProgress"
+                      cx="110"
+                      cy="110"
+                      r="78"
+                    ></circle>
+
+                    <circle
+                      class="score-gauge-inner-ring"
+                      cx="110"
+                      cy="110"
+                      r="60"
+                    ></circle>
+                  </svg>
+
+                  <div class="score-gauge-center">
+                    <div class="score-gauge-label">일치 점수</div>
+                    <div class="score-gauge-value" id="matchingScore">--</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="decision-sub" id="decisionSubText">
+                ECG 데이터를 수신하면 인증 결과가 표시됩니다.
+              </div>
+            </div>
+
+            <div class="result-list">
+              <div class="result-row">
+                <span>처리 모드</span>
+                <strong id="modeValue">-</strong>
+              </div>
+
+              <div class="result-row">
+                <span>모델</span>
+                <strong>Plain CNN1D</strong>
+              </div>
+
+              <div class="result-row">
+                <span>ECG 지문</span>
+                <strong>256D Embedding</strong>
+              </div>
+
+              <div class="result-row">
+                <span>유사도</span>
+                <strong id="similarityValue">-</strong>
+              </div>
+
+              <div class="result-row">
+                <span>기준값</span>
+                <strong id="thresholdValue">0.850</strong>
+              </div>
+
+              <div class="result-row">
+                <span>판정 결과</span>
+                <strong id="decisionValue">-</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel template-panel">
+            <div class="panel-title">등록 템플릿</div>
+
+            <div class="template-status">
+              <span class="dot" id="templateDot"></span>
+
+              <div>
+                <strong id="templateMain">등록된 템플릿 없음</strong>
+                <p id="templateDesc">
+                  첫 번째 ECG 데이터가 기준 템플릿으로 저장됩니다.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel side-action-panel">
+            <div class="panel-title">기능</div>
+
+            <div class="side-actions">
+              <button class="action-btn log" id="authLogBtn" type="button">
+                인증 기록
+              </button>
+
+              <button class="action-btn export" id="exportBtn" type="button">
+                PDF 리포트 저장
+              </button>
+
+              <button class="action-btn reset" id="resetBtn" type="button">
+                초기화
+              </button>
+            </div>
+          </div>
+        </aside>
+      </section>
+
+      <footer class="footer"></footer>
+    </main>
+
+    <div class="toast" id="toast">Message</div>
+
+    <div class="modal-backdrop" id="modalBackdrop">
+      <div class="modal-box">
+        <div class="modal-header">
+          <h3 id="modalTitle">정보</h3>
+          <button class="modal-close" id="modalCloseBtn" type="button">
+            ×
+          </button>
+        </div>
+
+        <div class="modal-body" id="modalBody">내용을 불러오는 중입니다.</div>
+      </div>
+    </div>
+
+    <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="{{ url_for('static', filename='js/Cafe24Simplehae-normal.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+  </body>
+</html>

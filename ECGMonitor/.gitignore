@@ -1,0 +1,30 @@
+# Gradle build outputs
+.gradle/
+build/
+app/build/
+
+# Android Studio local files
+.idea/
+*.iml
+local.properties
+
+# Build artifacts
+*.apk
+*.aab
+*.ap_
+*.dex
+
+# Signing keys
+*.jks
+*.keystore
+keystore.properties
+
+# Samsung SDK binary
+app/libs/*.aar
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db

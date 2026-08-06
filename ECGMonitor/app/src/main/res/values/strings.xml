@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">ECG Monitor</string>
+    <!--
+    This string is used for square devices and overridden by hello_world in
+    -->
+    <string name="start">Start</string>
+    <string name="stop">Stop</string>
+    <string name="outputStart">Press Start and put your index finger on watch Home button.</string>
+    <string name="outputMeasuring">Measuring…</string>
+    <string name="outputWarning">Wear your watch tightly on and keep index finger on Home button.</string>
+    <string name="MeasurementFailed">Measurement failed. Keep your watch tightly on and index finger on Home button.</string>
+    <string name="MeasurementSuccessful">Measurement finished.\nECG: %s mV</string>
+    <string name="MeasurementUpdate">"Measuring. Remaining time: %d seconds.\nCurrent ECG: %s mV"</string>
+    <string name="RepeatMeasurement">Measure again</string>
+    <string name="PermissionDeniedPermanently">Permissions denied. Grant permissions in watch settings and start application again.</string>
+    <string name="PermissionDeniedRationale">User permission is required to make ECG Measurement.</string>
+    <string name="NoHealthPlatformError">Health Platform version is outdated or not installed.</string>
+    <string name="ConnectedToHS">Connected to Health Services.</string>
+    <string name="NoECGSupport">ECG no supported on this device.</string>
+    <string name="ConnectionError">Could not connect to Health Services. Check error log.</string>
+    <string name="NoPermission">Permissions Check Failed.</string>
+    <string name="SDKPolicyError">SDK Policy denied.</string>
+    <string name="additionalHealthDataPermission">com.samsung.android.hardware.sensormanager.permission.READ_ADDITIONAL_HEALTH_DATA</string>
+</resources>

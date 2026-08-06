@@ -1,0 +1,44 @@
+section,metric,value
+dataset,SEGMENT_MODE,rr_segment
+dataset,USE_RR_RIGID_THRESHOLD,True
+dataset,RR_STD_FACTOR,1.5
+dataset,X_shape,"(6665, 400)"
+dataset,y_shape,"(6665,)"
+dataset,num_people,90
+dataset,num_records,310
+dataset_rr,rr_len_count,6665.0
+dataset_rr,rr_len_mean,380.2327081770443
+dataset_rr,rr_len_std,65.69887934768467
+dataset_rr,rr_len_min,151.0
+dataset_rr,rr_len_25%,335.0
+dataset_rr,rr_len_50%,377.0
+dataset_rr,rr_len_75%,422.0
+dataset_rr,rr_len_max,669.0
+split,X_train_shape,"(3582, 400, 1)"
+split,X_val_shape,"(992, 400, 1)"
+split,X_test_shape,"(2091, 400, 1)"
+split,y_train_shape,"(3582,)"
+split,y_val_shape,"(992,)"
+split,y_test_shape,"(2091,)"
+split,train_classes,90
+split,val_classes,41
+split,test_classes,89
+split,train_records,166
+split,val_records,47
+split,test_records,97
+split_train,beats_per_subject_min,14
+split_train,beats_per_subject_mean,39.8
+split_train,beats_per_subject_max,297
+split_train,rr_len_raw_mean,379.6091568955891
+split_val,beats_per_subject_min,15
+split_val,beats_per_subject_mean,24.195121951219512
+split_val,beats_per_subject_max,81
+split_val,rr_len_raw_mean,387.54334677419354
+split_test,beats_per_subject_min,15
+split_test,beats_per_subject_mean,23.49438202247191
+split_test,beats_per_subject_max,83
+split_test,rr_len_raw_mean,377.83261597321854
+classification,loss,0.7641711235046387
+classification,top1_acc,0.8240076518412243
+classification,top3_acc,0.921090387374462
+classification,top5_acc,0.9426111908177905

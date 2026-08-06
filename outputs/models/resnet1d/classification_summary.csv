@@ -1,0 +1,5 @@
+section,metric,value
+classification,loss,0.7641711235046387
+classification,top1_acc,0.8240076518412243
+classification,top3_acc,0.921090387374462
+classification,top5_acc,0.9426111908177905
